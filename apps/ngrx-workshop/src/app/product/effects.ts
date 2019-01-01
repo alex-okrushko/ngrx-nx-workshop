@@ -20,12 +20,14 @@ import { Store } from '@ngrx/store';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
+import { RatingService } from './rating.service';
 
 @Injectable()
 export class ProductEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly productService: ProductService,
+    private readonly ratingsService: RatingService,
     private readonly snackBar: MatSnackBar,
     private readonly appRef: ApplicationRef,
     private readonly store: Store
@@ -93,5 +95,42 @@ export class ProductEffects {
         })
       ),
     { dispatch: false }
+  );
+
+  fetchCustomerRatings$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(productListActions.productsOpened),
+      switchMap(() =>
+        this.ratingsService.getRatings().pipe(
+          map(ratings => apiActions.ratingsFetchedSuccess({ ratings })),
+          catchError(() => of(apiActions.ratingsFetchedError()))
+        )
+      )
+    )
+  );
+
+  fetchCurrentProductCustomerRating$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(productDetailsActions.productDetailsOpened),
+      withLatestFrom(this.store.select(selectors.getCurrentProductId)),
+      switchMap(([, id]) =>
+        this.ratingsService.getRating(id!).pipe(
+          map(rating => apiActions.ratingSingleFetchedSuccess({ rating })),
+          catchError(() => of(apiActions.ratingSingleFetchedError()))
+        )
+      )
+    )
+  );
+
+  setProductCustomerRating$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(productDetailsActions.rateProduct),
+      switchMap(rating =>
+        this.ratingsService.setRating(rating).pipe(
+          map(ratings => apiActions.rateProductSuccess({ ratings })),
+          catchError(() => of(apiActions.rateProductError()))
+        )
+      )
+    )
   );
 }

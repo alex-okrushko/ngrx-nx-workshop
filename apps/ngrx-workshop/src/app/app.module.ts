@@ -8,9 +8,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { reducer } from './product/reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { ProductEffects } from './product/effects';
+import { ProductModule } from './product/product.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CartModule } from './cart/cart.module';
 
@@ -23,9 +22,10 @@ import { CartModule } from './cart/cart.module';
     CartIconModule,
     MatToolbarModule,
     MatSnackBarModule,
-    StoreModule.forRoot({ product: reducer }),
-    EffectsModule.forRoot([ProductEffects]),
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     CartModule,
+    ProductModule,
     StoreDevtoolsModule.instrument({ maxAge: 50 })
   ],
   bootstrap: [AppComponent]
