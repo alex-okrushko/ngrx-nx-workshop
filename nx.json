@@ -1,0 +1,24 @@
+{
+  "npmScope": "ngrx-nx-workshop",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "ngrx-workshop-e2e": {
+      "tags": []
+    },
+    "ngrx-workshop": {
+      "tags": []
+    },
+    "api": {
+      "tags": []
+    },
+    "api-interfaces": {
+      "tags": []
+    }
+  }
+}
