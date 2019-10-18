@@ -1,7 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Product } from '@ngrx-nx-workshop/api-interfaces';
-import { data } from '@ngrx-nx-workshop/data';
-import * as productListActions from './product-list/actions';
+import * as apiActions from './actions';
 
 interface ProductState {
   products?: Product[];
@@ -12,8 +11,8 @@ const initState: ProductState = {
 
 const productsReducer = createReducer(
   initState,
-  on(productListActions.productsOpened, state => ({
-    products: [...data]
+  on(apiActions.productsFetched, (state, { products }) => ({
+    products: [...products]
   }))
 );
 

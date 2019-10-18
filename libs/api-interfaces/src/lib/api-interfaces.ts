@@ -16,7 +16,7 @@ export interface BasicProduct {
 }
 
 export interface Product extends BasicProduct {
-  description: string;
+  description?: string;
 }
 
 export interface CartItem {
