@@ -1,0 +1,24 @@
+<div
+  class="products-container"
+  *ngIf="products$ | async as products; else loadingProducts"
+>
+  <a
+    class="card-link"
+    [routerLink]="['/details', product.id]"
+    *ngFor="let product of products"
+  >
+    <mat-card>
+      <mat-card-title>{{ product.title }}</mat-card-title>
+      <img class="thumbnail" [src]="product.url" />
+
+      <ngrx-nx-workshop-stars
+        [rating]="product.rating"
+        [rated]="(customerRatings$ | async)?.get(product.id)"
+      ></ngrx-nx-workshop-stars>
+    </mat-card>
+  </a>
+</div>
+
+<ng-template #loadingProducts>
+  <ngrx-nx-workshop-spinner></ngrx-nx-workshop-spinner>
+</ng-template>

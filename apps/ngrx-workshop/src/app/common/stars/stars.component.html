@@ -1,0 +1,9 @@
+<mat-icon
+  *ngFor="let star of [1, 2, 3, 4, 5]"
+  (mouseenter)="starMouseEnter(star)"
+  (mouseleave)="starMouseLeave()"
+  (click)="rate(star)"
+  [color]="rated || mouseOver ? 'accent' : 'primary'"
+>
+  {{ star <= (starOver || rated || rating) ? 'star' : 'star_border' }}
+</mat-icon>

@@ -2,9 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": []
+    "types": [],
+    "target": "ES2017"
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": false,
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
-  "include": ["**/*.ts"],
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts"]
+  "include": ["src/**/*.d.ts"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
 }

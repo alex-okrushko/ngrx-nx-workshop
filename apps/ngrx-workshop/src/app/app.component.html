@@ -1,8 +1,11 @@
-<div style="text-align:center">
-  <h1>Welcome to ngrx-workshop!</h1>
-  <img
-    width="450"
-    src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png"
-  />
-</div>
-<div>Message: {{ hello$ | async | json }}</div>
+<header>
+  <mat-toolbar color="primary">
+    <a routerLink="" class="fill">
+      NgRx Workshop Store
+    </a>
+    <ngrx-nx-workshop-cart></ngrx-nx-workshop-cart>
+  </mat-toolbar>
+</header>
+<main>
+  <router-outlet></router-outlet>
+</main>

@@ -1,0 +1,28 @@
+{
+  "projectType": "library",
+  "root": "libs/data",
+  "sourceRoot": "libs/data/src",
+  "prefix": "ngrx-nx-workshop",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/libs/data"
+      ],
+      "options": {
+        "jestConfig": "libs/data/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/data/src/**/*.ts",
+          "libs/data/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

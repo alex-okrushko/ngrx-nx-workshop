@@ -1,0 +1,7 @@
+:host {
+  display: inline-block;
+
+  &.can-rate:hover {
+    cursor: pointer;
+  }
+}
