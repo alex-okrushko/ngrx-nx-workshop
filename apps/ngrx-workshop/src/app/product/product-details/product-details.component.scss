@@ -1,0 +1,24 @@
+mat-card {
+  margin: 20px;
+}
+
+img {
+  max-width: 40%;
+  object-fit: contain;
+  margin-right: 20px;
+}
+
+mat-card-actions {
+  display: flex;
+  align-items: center;
+
+  .space-filler {
+    flex: 1;
+  }
+}
+
+mat-card-content {
+  display: flex;
+  direction: row;
+  flex-wrap: nowrap;
+}

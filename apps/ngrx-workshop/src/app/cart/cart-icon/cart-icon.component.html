@@ -1,0 +1,5 @@
+<button type="button" mat-icon-button routerLink="cart">
+  <mat-icon>shopping_cart</mat-icon>
+  <span class="counter-background"></span>
+  <span class="counter">{{ (cartItemsCounter$ | async) || 0 }}</span>
+</button>

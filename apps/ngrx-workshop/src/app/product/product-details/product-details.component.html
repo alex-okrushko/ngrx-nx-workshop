@@ -1,0 +1,39 @@
+<mat-card *ngIf="product$ | async as product; else loading">
+  <mat-card-title>{{ product.title }}</mat-card-title>
+  <mat-card-subtitle>{{ product.price | currency }}</mat-card-subtitle>
+  <mat-card-content>
+    <img [src]="product.url" />
+    <span *ngIf="product.description">{{ product.description }}</span>
+    <mat-progress-bar
+      *ngIf="!product.description"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </mat-card-content>
+  <mat-card-actions>
+    <ngrx-nx-workshop-stars
+      canRate="true"
+      (ratingChange)="setRating(product.id, $event)"
+      [rated]="customerRating$ | async"
+      [rating]="product.rating"
+    >
+    </ngrx-nx-workshop-stars>
+    <div *ngIf="customerRating$ | async">Your rating</div>
+    <div class="space-filler"></div>
+    <div class="action-buttons">
+      <button mat-button type="button" (click)="back()">
+        Back
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="addToCart(product.id)"
+      >
+        Add to cart
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>
+<ng-template #loading>
+  <ngrx-nx-workshop-spinner></ngrx-nx-workshop-spinner>
+</ng-template>

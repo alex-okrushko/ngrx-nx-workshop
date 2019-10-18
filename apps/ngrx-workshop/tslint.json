@@ -1,7 +1,0 @@
-{
-  "extends": "../../tslint.json",
-  "rules": {
-    "directive-selector": [true, "attribute", "ngrxNxWorkshop", "camelCase"],
-    "component-selector": [true, "element", "ngrx-nx-workshop", "kebab-case"]
-  }
-}
