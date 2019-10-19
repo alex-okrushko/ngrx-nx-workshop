@@ -11,6 +11,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { reducer } from './product/reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ProductEffects } from './product/effects';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,6 +21,7 @@ import { ProductEffects } from './product/effects';
     RoutingModule,
     CartIconModule,
     MatToolbarModule,
+    MatSnackBarModule,
     StoreModule.forRoot({ product: reducer }),
     EffectsModule.forRoot([ProductEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 50 })
