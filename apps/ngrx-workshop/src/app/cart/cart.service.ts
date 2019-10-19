@@ -29,10 +29,8 @@ export class CartService {
       .subscribe(arr => this.cartItemsSubject$.next(arr));
   }
 
-  getCartProducts(): void {
-    this.http
-      .get<CartItem[]>(`/api/cart/cart-content`)
-      .subscribe(arr => this.cartItemsSubject$.next(arr));
+  getCartProducts(): Observable<CartItem[]> {
+    return this.http.get<CartItem[]>(`/api/cart/cart-content`);
   }
 
   purchase(purchaseItems: CartItem[]): Observable<boolean> {
