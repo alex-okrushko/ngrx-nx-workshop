@@ -6,7 +6,7 @@ export interface GlobalState {
   product: ProductState;
 }
 
-interface ProductState {
+export interface ProductState {
   products?: Product[];
 }
 const initState: ProductState = {
@@ -20,7 +20,17 @@ const productsReducer = createReducer(
   })),
   on(apiActions.productsFetchedError, state => ({
     products: []
-  }))
+  })),
+  on(apiActions.productFetchedSuccess, (state, { product }) => {
+    const productsClone = state.products ? [...state.products] : [];
+    const indexOfProduct = productsClone.findIndex(p => p.id === product.id);
+    // Remove old one and replace with single product fetch,
+    productsClone.splice(indexOfProduct, 1, product);
+    return {
+      ...state,
+      products: productsClone
+    };
+  })
 );
 
 export function reducer(state: ProductState | undefined, action: Action) {

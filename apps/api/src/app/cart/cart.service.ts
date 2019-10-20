@@ -1,7 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CartItem } from '@ngrx-nx-workshop/api-interfaces';
 
-
 @Injectable()
 export class CartService {
   private cartProducts: CartItem[] = [];
