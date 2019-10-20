@@ -1,22 +1,33 @@
 import { GlobalState, ProductState } from './reducer';
 import * as routerSelectors from '../router/selectors';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { Product } from '@ngrx-nx-workshop/api-interfaces';
+import { productAdapter } from './reducer';
 
 const getProductState = createFeatureSelector<ProductState>('product');
 
-export const getProducts = createSelector(
+const getProductsState = createSelector(
   getProductState,
   state => state.products
+);
+
+const { selectAll, selectEntities } = productAdapter.getSelectors();
+
+export const getProducts = createSelector(
+  getProductsState,
+  selectAll
+);
+const getProductsEntities = createSelector(
+  getProductsState,
+  selectEntities
 );
 
 export const getCurrentProductId = routerSelectors.getRouterParam('productId');
 
 export const getCurrentProduct = createSelector(
-  getProducts,
+  getProductsEntities,
   getCurrentProductId,
   (products, id) => {
     if (id == null || !products) return undefined;
-    return products.find(p => p.id === id);
+    return products[id];
   }
 );
