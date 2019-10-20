@@ -34,6 +34,13 @@ export class ProductEffects {
   fetchProducts$ = createEffect(() =>
     this.actions$.pipe(
       ofType(productListActions.productsOpened, cartDetailsActions.pageOpened),
+      map(() => apiActions.productsFetch())
+    )
+  );
+
+  fetchingProducts$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(apiActions.productsFetch),
       exhaustMap(() =>
         this.productService.getProducts().pipe(
           map(products => apiActions.productsFetchedSuccess({ products })),

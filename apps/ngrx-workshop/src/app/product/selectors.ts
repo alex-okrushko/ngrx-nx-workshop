@@ -31,3 +31,8 @@ export const getCurrentProduct = createSelector(
     return products[id];
   }
 );
+
+export const getProductsCallState = createSelector(
+  getProductState,
+  state => state && state.productsCallState
+);
