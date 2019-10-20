@@ -1,39 +1,40 @@
-<ng-container *ngIf="cartProducts$ | async as cartProducts; else loading">
-  <ng-container *ngIf="cartProducts.length; else noProducts">
-    <mat-card *ngFor="let product of cartProducts">
-      <mat-card-content>
-        <img [src]="product.url" />
-        <div class="fill">
-          <mat-card-title>{{ product.title }}</mat-card-title>
-          <mat-card-subtitle
-            >Quantity: {{ product.quantity }}</mat-card-subtitle
-          >
-        </div>
-        <div class="details">
-          <div>Price: {{ product.price | currency }}</div>
-          <button mat-button (click)="removeOne(product.id)">
-            Remove
-          </button>
-        </div>
-      </mat-card-content>
-    </mat-card>
-    <footer>
-      <button type="button" mat-button (click)="removeAll()">
-        Remove All
-      </button>
-      <div class="fill"></div>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="purchase(cartProducts)"
-      >
-        Purchase
-      </button>
-      <div class="total">Total: {{ (total$ | async) || 0 | currency }}</div>
-    </footer>
-  </ng-container>
+<ng-container *ngIf="cartDetailsVm$ | async as cartDetails">
+  <ng-container *ngIf="cartDetails.products as cartProducts; else loading">
+    <ng-container *ngIf="cartProducts.length; else noProducts">
+      <mat-card *ngFor="let product of cartProducts">
+        <mat-card-content>
+          <img [src]="product.url" />
+          <div class="fill">
+            <mat-card-title>{{ product.title }}</mat-card-title>
+            <mat-card-subtitle
+              >Quantity: {{ product.quantity }}</mat-card-subtitle
+            >
+          </div>
+          <div class="details">
+            <div>Price: {{ product.price | currency }}</div>
+            <button mat-button (click)="removeOne(product.id)">
+              Remove
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <footer>
+        <button type="button" mat-button (click)="removeAll()">
+          Remove All
+        </button>
+        <div class="fill"></div>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="purchase(cartProducts)"
+        >
+          Purchase
+        </button>
+        <div class="total">Total: {{ cartDetails.total || 0 | currency }}</div>
+      </footer>
+    </ng-container>
 </ng-container>
-
+</ng-container>
 <ng-template #loading>
   <mat-spinner class="loadingCart"></mat-spinner>
 </ng-template>

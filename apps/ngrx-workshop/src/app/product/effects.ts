@@ -13,6 +13,7 @@ import {
 import * as productListActions from './product-list/actions';
 import * as productDetailsActions from './product-details/actions';
 import * as apiActions from './actions';
+import * as cartDetailsActions from '../cart/cart-details/actions';
 import { ProductService } from './product.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
@@ -32,7 +33,7 @@ export class ProductEffects {
 
   fetchProducts$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(productListActions.productsOpened),
+      ofType(productListActions.productsOpened, cartDetailsActions.pageOpened),
       exhaustMap(() =>
         this.productService.getProducts().pipe(
           map(products => apiActions.productsFetchedSuccess({ products })),
