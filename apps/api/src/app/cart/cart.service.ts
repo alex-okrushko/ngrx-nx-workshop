@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CartItem } from '@ngrx-nx-workshop/api-interfaces';
+
 
 @Injectable()
 export class CartService {
@@ -10,6 +11,9 @@ export class CartService {
   }
 
   addProduct(id: string): CartItem[] {
+    if (Math.random() < 0.25) {
+      throw new HttpException('cart failed', HttpStatus.FORBIDDEN);
+    }
     const item = this.getItem(id);
     if (item) {
       item.quantity += 1;
