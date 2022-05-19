@@ -50,7 +50,7 @@ const productsReducer = createReducer(
   })),
   on(apiActions.ratingsFetchedSuccess, (state, { ratings }) => ({
     ...state,
-    customerRatings: ratingsAdapter.addAll(ratings, state.customerRatings)
+    customerRatings: ratingsAdapter.setAll(ratings, state.customerRatings)
   })),
   on(apiActions.ratingSingleFetchedSuccess, (state, { rating }) => ({
     ...state,

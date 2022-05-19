@@ -6,6 +6,8 @@
     "ng": "nx",
     "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
     "start": "nx serve",
+    "start-api": "nx serve api",
+    "start-workshop": "nx serve ngrx-workshop",
     "build": "nx build",
     "test": "nx test"
   },
