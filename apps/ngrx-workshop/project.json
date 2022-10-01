@@ -1,14 +1,12 @@
 {
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "root": "apps/ngrx-workshop",
   "sourceRoot": "apps/ngrx-workshop/src",
   "prefix": "ngrx-nx-workshop",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/ngrx-workshop",
         "index": "apps/ngrx-workshop/src/index.html",
@@ -91,11 +89,9 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/apps/ngrx-workshop"
-      ],
+      "outputs": ["coverage/apps/ngrx-workshop"],
       "options": {
-        "jestConfig": "apps/ngrx-workshop/jest.config.js",
+        "jestConfig": "apps/ngrx-workshop/jest.config.ts",
         "passWithNoTests": true
       }
     }
