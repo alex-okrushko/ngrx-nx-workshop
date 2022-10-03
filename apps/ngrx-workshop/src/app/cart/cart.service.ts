@@ -14,25 +14,25 @@ export class CartService {
   addProduct(id: string): void {
     this.http
       .post<CartItem[]>(`/api/cart/add/${id}`, {})
-      .subscribe(arr => this.cartItemsSubject$.next(arr));
+      .subscribe((arr) => this.cartItemsSubject$.next(arr));
   }
 
   removeProduct(id: string): void {
     this.http
       .post<CartItem[]>(`/api/cart/remove/${id}`, {})
-      .subscribe(arr => this.cartItemsSubject$.next(arr));
+      .subscribe((arr) => this.cartItemsSubject$.next(arr));
   }
 
   removeAll(): void {
     this.http
       .post<CartItem[]>(`/api/cart/clear`, {})
-      .subscribe(arr => this.cartItemsSubject$.next(arr));
+      .subscribe((arr) => this.cartItemsSubject$.next(arr));
   }
 
   getCartProducts(): void {
     this.http
       .get<CartItem[]>(`/api/cart/cart-content`)
-      .subscribe(arr => this.cartItemsSubject$.next(arr));
+      .subscribe((arr) => this.cartItemsSubject$.next(arr));
   }
 
   purchase(purchaseItems: CartItem[]): Observable<boolean> {

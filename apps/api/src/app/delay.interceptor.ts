@@ -2,16 +2,16 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  NestInterceptor
+  NestInterceptor,
 } from '@nestjs/common';
-import { Observable, timer, throwError } from 'rxjs';
-import { delay, catchError, switchMap } from 'rxjs/operators';
+import { Observable, throwError, timer } from 'rxjs';
+import { catchError, delay, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class DelayInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      catchError(error => {
+      catchError((error) => {
         return timer((Math.random() + 1) * 1000).pipe(
           switchMap(() => throwError(error))
         );

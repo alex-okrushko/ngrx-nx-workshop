@@ -2,6 +2,10 @@ mat-card {
   margin: 20px;
 }
 
+h2 {
+  margin: 20px;
+}
+
 img {
   max-width: 40%;
   object-fit: contain;
@@ -22,3 +26,23 @@ mat-card-content {
   direction: row;
   flex-wrap: nowrap;
 }
+
+.review {
+  max-width: 500px;
+}
+
+form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  button {
+    align-self: end;
+  }
+
+  &.hide {
+    display: none;
+  }
+}
+
+

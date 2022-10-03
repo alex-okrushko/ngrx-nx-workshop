@@ -7,6 +7,6 @@ import { StarsComponent } from './stars.component';
 @NgModule({
   imports: [CommonModule, MatIconModule],
   declarations: [StarsComponent],
-  exports: [StarsComponent]
+  exports: [StarsComponent],
 })
 export class StarsModule {}

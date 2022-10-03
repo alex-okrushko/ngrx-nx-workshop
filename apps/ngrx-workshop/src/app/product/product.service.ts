@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { defer, Observable, of } from 'rxjs';
-import { delay, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { BasicProduct, Product } from '@ngrx-nx-workshop/api-interfaces';
 import { HttpClient } from '@angular/common/http';
+import { BasicProduct, Product } from '@ngrx-nx-workshop/api-interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {

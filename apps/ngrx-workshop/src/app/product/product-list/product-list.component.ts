@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, shareReplay } from 'rxjs';
 
-import { BasicProduct, Rating } from '@ngrx-nx-workshop/api-interfaces';
-import { ProductService } from '../product.service';
+import { Rating } from '@ngrx-nx-workshop/api-interfaces';
 import { RatingService } from '../rating.service';
-import { map, shareReplay } from 'rxjs/operators';
+
+import { ProductModel } from '../../model/product';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'ngrx-nx-workshop-home',
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.scss']
+  styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
-  products$?: Observable<BasicProduct[]>;
-  customerRatings$?: Observable<Map<string, Rating>>;
+  products$?: Observable<ProductModel[]>;
+  customerRatings$?: Observable<{ [productId: string]: Rating }>;
 
   constructor(
     private readonly productService: ProductService,
@@ -24,16 +25,19 @@ export class ProductListComponent implements OnInit {
     this.products$ = this.productService.getProducts();
 
     this.customerRatings$ = this.ratingService.getRatings().pipe(
-      map(arr => {
-        const ratingsMap = new Map<string, Rating>();
-        for (const productRating of arr) {
-          ratingsMap.set(productRating.productId, productRating.rating);
-        }
-        return ratingsMap;
-      }),
+      map((ratingsArray) =>
+        // Convert from Array to Indexable.
+        ratingsArray.reduce(
+          (acc: { [productId: string]: Rating }, ratingItem) => {
+            acc[ratingItem.productId] = ratingItem.rating;
+            return acc;
+          },
+          {}
+        )
+      ),
       shareReplay({
         refCount: true,
-        bufferSize: 1
+        bufferSize: 1,
       })
     );
   }
