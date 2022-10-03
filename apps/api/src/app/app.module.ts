@@ -8,6 +8,6 @@ import { RatingService } from './rating/rating.service';
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [ProductService, CartService, RatingService]
+  providers: [ProductService, CartService, RatingService],
 })
 export class AppModule {}

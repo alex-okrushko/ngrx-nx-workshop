@@ -9,6 +9,6 @@ import { CartIconComponent } from './cart-icon.component';
 @NgModule({
   imports: [CommonModule, MatIconModule, MatButtonModule, RouterModule],
   declarations: [CartIconComponent],
-  exports: [CartIconComponent]
+  exports: [CartIconComponent],
 })
 export class CartIconModule {}

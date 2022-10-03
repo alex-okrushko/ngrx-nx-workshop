@@ -6,7 +6,7 @@ export class CartService {
   private cartProducts: CartItem[] = [];
 
   private getItem(id: string): CartItem | undefined {
-    return this.cartProducts.find(cartItem => cartItem.productId === id);
+    return this.cartProducts.find((cartItem) => cartItem.productId === id);
   }
 
   addProduct(id: string): CartItem[] {
@@ -25,7 +25,7 @@ export class CartService {
       item.quantity -= 1;
     } else {
       this.cartProducts = this.cartProducts.filter(
-        cartProduct => cartProduct.productId !== id
+        (cartProduct) => cartProduct.productId !== id
       );
     }
     return this.cartProducts;

@@ -13,8 +13,8 @@ import { CartDetailsComponent } from './cart-details.component';
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
-  declarations: [CartDetailsComponent]
+  declarations: [CartDetailsComponent],
 })
 export class CartDetailsModule {}

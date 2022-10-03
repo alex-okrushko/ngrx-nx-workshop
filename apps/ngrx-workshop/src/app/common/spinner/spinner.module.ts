@@ -5,6 +5,6 @@ import { SpinnerComponent } from './spinner.component';
 @NgModule({
   imports: [MatProgressSpinnerModule],
   declarations: [SpinnerComponent],
-  exports: [SpinnerComponent]
+  exports: [SpinnerComponent],
 })
 export class SpinnerModule {}
