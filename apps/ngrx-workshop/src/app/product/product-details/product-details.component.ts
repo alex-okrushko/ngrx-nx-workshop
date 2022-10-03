@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Rating } from '@ngrx-nx-workshop/api-interfaces';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest} from 'rxjs';
+import { concatMap, filter, map, shareReplay, switchMap, take } from 'rxjs';
 
 import { CartService } from '../../cart/cart.service';
 import { ProductService } from '../product.service';
@@ -14,18 +14,28 @@ import { RatingService } from '../rating.service';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss']
 })
-export class ProductDetailsComponent {
+export class ProductDetailsComponent {  
+
   private readonly productId$ = this.router.paramMap.pipe(
     map((params: ParamMap) => params.get('productId')),
     filter((id: string | null): id is string => !!id),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  product$ = this.productId$.pipe(
+  readonly product$ = this.productId$.pipe(
     switchMap(id => this.productService.getProduct(id))
   );
 
-  private customerRating$ = new BehaviorSubject<number | undefined>(undefined);
+  readonly reviewsRefresh$ = new BehaviorSubject<void>(undefined);
+
+  readonly reviews$ = combineLatest([
+    this.productId$,
+    this.reviewsRefresh$
+  ]).pipe(
+    switchMap(([id]) => this.ratingService.getReviews(id))
+  );
+
+  protected customerRating$ = new BehaviorSubject<number | undefined>(undefined);
 
   constructor(
     private readonly router: ActivatedRoute,
@@ -63,5 +73,20 @@ export class ProductDetailsComponent {
 
   back() {
     this.location.back();
+  }
+
+  submit(review: {
+    reviewer: string;
+    reviewText: string;
+  }) {
+    this.productId$.pipe(
+      take(1),
+      concatMap(productId =>this.ratingService.postReview({
+        productId,
+        ...review,
+      })),
+      ).subscribe(() => {
+        this.reviewsRefresh$.next();
+      });
   }
 }

@@ -6,6 +6,7 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { Rating } from '@ngrx-nx-workshop/api-interfaces';
 
 @Component({
   selector: 'ngrx-nx-workshop-stars',
@@ -17,13 +18,15 @@ export class StarsComponent {
   @Input()
   canRate = false;
 
-  @Input() rated = 0;
+  @Input() rated: number|undefined = 0;
   @Input() rating = 0;
 
-  @Output() ratingChange = new EventEmitter<number>();
+  @Output() ratingChange = new EventEmitter<Rating>();
 
   mouseOver = false;
   starOver = 0;
+
+  readonly availableOptions: Rating[] = [1, 2, 3, 4, 5];
 
   @HostListener('mouseenter')
   onMouseEnter() {
@@ -43,7 +46,7 @@ export class StarsComponent {
     this.starOver = 0;
   }
 
-  rate(star: number) {
+  rate(star: Rating) {
     if (!this.canRate) {
       return;
     }

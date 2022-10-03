@@ -13,7 +13,7 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class ProductListComponent implements OnInit {
   products$?: Observable<BasicProduct[]>;
-  customerRatings$?: Observable<Map<string, Rating>>;
+  customerRatings$?: Observable<{[productId: string]: Rating}>;
 
   constructor(
     private readonly productService: ProductService,
@@ -24,13 +24,12 @@ export class ProductListComponent implements OnInit {
     this.products$ = this.productService.getProducts();
 
     this.customerRatings$ = this.ratingService.getRatings().pipe(
-      map(arr => {
-        const ratingsMap = new Map<string, Rating>();
-        for (const productRating of arr) {
-          ratingsMap.set(productRating.productId, productRating.rating);
-        }
-        return ratingsMap;
-      }),
+      map(ratingsArray => 
+        // Convert from Array to Indexable.
+        ratingsArray.reduce((acc: {[productId: string]: Rating}, ratingItem) => {
+          acc[ratingItem.productId] = ratingItem.rating;
+          return acc;
+        }, {})),
       shareReplay({
         refCount: true,
         bufferSize: 1

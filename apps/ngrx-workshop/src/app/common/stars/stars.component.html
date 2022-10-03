@@ -1,5 +1,5 @@
 <mat-icon
-  *ngFor="let star of [1, 2, 3, 4, 5]"
+  *ngFor="let star of availableOptions"
   (mouseenter)="starMouseEnter(star)"
   (mouseleave)="starMouseLeave()"
   (click)="rate(star)"

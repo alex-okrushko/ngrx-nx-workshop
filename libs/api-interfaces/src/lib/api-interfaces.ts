@@ -28,3 +28,10 @@ export interface ProductRating {
   productId: string;
   rating: Rating;
 }
+
+export interface Review {
+  productId: string;
+  reviewer: string;
+  reviewText: string;
+  reviewDate: number;
+}

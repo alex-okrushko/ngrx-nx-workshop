@@ -4,13 +4,14 @@ import {
   Get,
   Param,
   Post,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   BasicProduct,
   Product,
   ProductRating,
-  CartItem
+  CartItem,
+  Review,
 } from '@ngrx-nx-workshop/api-interfaces';
 
 import { CartService } from './cart/cart.service';
@@ -24,7 +25,7 @@ export class AppController {
   constructor(
     private readonly productService: ProductService,
     private readonly cartService: CartService,
-    private readonly ratingService: RatingService
+    private readonly ratingService: RatingService,
   ) {}
 
   @Get('product/product-list')
@@ -75,5 +76,15 @@ export class AppController {
   @Get('rating/get-ratings')
   getRatings(): ProductRating[] {
     return this.ratingService.getRatings();
+  }
+
+  @Get('reviews/get/:productId')
+  getReviews(@Param('productId') productId: string): Review[] {
+    return this.ratingService.getReviews(productId);
+  }
+
+  @Post('reviews/post/:id')
+  addReview(@Body() review: Pick<Review, 'productId'|'reviewText'|'reviewer'>): Review {
+    return this.ratingService.addReview(review);
   }
 }
