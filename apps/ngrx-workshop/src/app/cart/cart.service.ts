@@ -15,16 +15,12 @@ export class CartService {
     return this.http.post<CartItem[]>(`/api/cart/add/${id}`, {});
   }
 
-  removeProduct(id: string): void {
-    this.http
-      .post<CartItem[]>(`/api/cart/remove/${id}`, {})
-      .subscribe((arr) => this.cartItemsSubject$.next(arr));
+  removeProduct(id: string): Observable<CartItem[]> {
+    return this.http.post<CartItem[]>(`/api/cart/remove/${id}`, {});
   }
 
-  removeAll(): void {
-    this.http
-      .post<CartItem[]>(`/api/cart/clear`, {})
-      .subscribe((arr) => this.cartItemsSubject$.next(arr));
+  removeAll(): Observable<CartItem[]> {
+    return this.http.post<CartItem[]>(`/api/cart/clear`, {});
   }
 
   getCartProducts(): Observable<CartItem[]> {
