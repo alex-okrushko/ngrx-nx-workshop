@@ -13,8 +13,8 @@ import {
   switchMap,
   take,
 } from 'rxjs';
+import { selectCurrentProduct } from '../product.selectors';
 
-import { ProductService } from '../product.service';
 import { RatingService } from '../rating.service';
 
 import * as actions from './actions';
@@ -31,9 +31,7 @@ export class ProductDetailsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  readonly product$ = this.productId$.pipe(
-    switchMap((id) => this.productService.getProduct(id))
-  );
+  product$ = this.store.select(selectCurrentProduct);
 
   readonly reviewsRefresh$ = new BehaviorSubject<void>(undefined);
 
@@ -48,11 +46,12 @@ export class ProductDetailsComponent {
 
   constructor(
     private readonly router: ActivatedRoute,
-    private readonly productService: ProductService,
     private readonly ratingService: RatingService,
     private readonly location: Location,
     private readonly store: Store
   ) {
+    this.store.dispatch(actions.productDetailsOpened());
+
     this.productId$
       .pipe(switchMap((id) => this.ratingService.getRating(id)))
       .subscribe((productRating) =>
