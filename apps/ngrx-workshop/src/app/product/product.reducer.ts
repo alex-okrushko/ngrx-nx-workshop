@@ -1,24 +1,26 @@
 import { createReducer, on } from '@ngrx/store';
-import { data } from '@ngrx-nx-workshop/data';
-import * as productListActions from './product-list/actions';
+import * as apiActions from './actions';
 import { ProductModel } from '../model/product';
 
 export interface GlobalState {
-    product: ProductState;
+  product: ProductState;
 }
 
 interface ProductState {
   products?: ProductModel[];
 }
 const initState: ProductState = {
-  products: undefined
+  products: undefined,
 };
 
 export const productsReducer = createReducer(
   initState,
-  on(productListActions.productsOpened, state => ({
+  on(apiActions.productsFetchedSuccess, (state, { products }) => ({
     ...state,
-    products: [...data]
+    products: [...products],
+  })),
+  on(apiActions.productsFetchedError, (state) => ({
+    ...state,
+    products: [],
   }))
 );
-
