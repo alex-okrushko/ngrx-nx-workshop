@@ -8,6 +8,14 @@ import { ProductDetailsModule } from '../product/product-details/product-details
 import { ProductListComponent } from '../product/product-list/product-list.component';
 import { ProductListModule } from '../product/product-list/product-list.module';
 
+import {
+  routerReducer,
+  RouterState,
+  StoreRouterConnectingModule,
+} from '@ngrx/router-store';
+import { StoreModule } from '@ngrx/store';
+import { ROUTER_FEATURE_KEY } from './router.selectors';
+
 const routes: Routes = [
   { path: 'details/:productId', component: ProductDetailsComponent },
   { path: 'cart', component: CartDetailsComponent },
@@ -20,6 +28,11 @@ const routes: Routes = [
     ProductListModule,
     CartDetailsModule,
     RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+    StoreModule.forFeature(ROUTER_FEATURE_KEY, routerReducer),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: ROUTER_FEATURE_KEY,
+      routerState: RouterState.Minimal,
+    }),
   ],
   exports: [RouterModule],
 })
