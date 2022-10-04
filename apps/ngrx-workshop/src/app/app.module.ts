@@ -8,6 +8,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from './app.component';
 import { CartIconModule } from './cart/cart-icon/cart-icon.module';
+import { CartModule } from './cart/cart.module';
 import { ErrorEffects } from './error.effects';
 import { ProductEffects } from './product/product.effects';
 import { productsReducer } from './product/product.reducer';
@@ -24,6 +25,7 @@ import { RoutingModule } from './router/routing.module';
     StoreModule.forRoot({ product: productsReducer }),
     EffectsModule.forRoot([ProductEffects, ErrorEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 50 }),
+    CartModule,
   ],
   bootstrap: [AppComponent],
 })
