@@ -4,8 +4,11 @@ import { map, Observable, shareReplay } from 'rxjs';
 import { Rating } from '@ngrx-nx-workshop/api-interfaces';
 import { RatingService } from '../rating.service';
 
+import { Store } from '@ngrx/store';
 import { ProductModel } from '../../model/product';
-import { ProductService } from '../product.service';
+import { GlobalState } from '../product.reducer';
+import { selectProducts } from '../product.selectors';
+import * as actions from './actions';
 
 @Component({
   selector: 'ngrx-nx-workshop-home',
@@ -13,17 +16,18 @@ import { ProductService } from '../product.service';
   styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
-  products$?: Observable<ProductModel[]>;
+  products$?: Observable<ProductModel[] | undefined> =
+    this.store.select(selectProducts);
   customerRatings$?: Observable<{ [productId: string]: Rating }>;
 
   constructor(
-    private readonly productService: ProductService,
+    private readonly store: Store<GlobalState>,
     private readonly ratingService: RatingService
-  ) {}
+  ) {
+    this.store.dispatch(actions.productsOpened());
+  }
 
   ngOnInit() {
-    this.products$ = this.productService.getProducts();
-
     this.customerRatings$ = this.ratingService.getRatings().pipe(
       map((ratingsArray) =>
         // Convert from Array to Indexable.
