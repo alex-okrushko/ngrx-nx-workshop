@@ -3,11 +3,9 @@ import { createReducer, on } from '@ngrx/store';
 import { ProductModel } from '../model/product';
 import * as apiActions from './actions';
 
-export interface GlobalState {
-  product: ProductState;
-}
+export const PRODUCT_FEATURE_KEY = 'product';
 
-interface ProductState {
+export interface ProductState {
   products?: ProductModel[];
 }
 const initState: ProductState = {
@@ -23,5 +21,19 @@ export const productsReducer = createReducer(
   on(apiActions.productsFetchedError, (state) => ({
     ...state,
     products: [],
-  }))
+  })),
+  on(apiActions.singleProductFetchedSuccess, (state, { product }) => {
+    const productsClone = state.products ? [...state.products] : [];
+    const indexOfProduct = productsClone.findIndex((p) => p.id === product.id);
+    // Remove old one and replace with single product fetch,
+    if (indexOfProduct < 0) {
+      productsClone.push(product);
+    } else {
+      productsClone.splice(indexOfProduct, 1, product);
+    }
+    return {
+      ...state,
+      products: productsClone,
+    };
+  })
 );
