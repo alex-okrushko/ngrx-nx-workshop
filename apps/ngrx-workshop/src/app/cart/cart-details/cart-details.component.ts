@@ -1,23 +1,20 @@
 import { Component } from '@angular/core';
-import {
-  filter,
-  from,
-  map,
-  mergeMap,
-  Observable,
-  switchMap,
-  toArray,
-} from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { createSelector, Store } from '@ngrx/store';
 
 import { CartProduct } from '../../model/product';
-import { ProductService } from '../../product/product.service';
-import { selectCartItems } from '../cart.selectors';
+import { selectCartProducts, selectCartTotal } from '../cart.selectors';
 import { CartService } from '../cart.service';
 import * as actions from './actions';
+
+export const cartDetailsVm = createSelector(
+  selectCartProducts,
+  selectCartTotal,
+  (products, total) => ({ products, total })
+);
 
 @Component({
   selector: 'ngrx-nx-workshop-cart-details',
@@ -25,42 +22,13 @@ import * as actions from './actions';
   styleUrls: ['./cart-details.component.scss'],
 })
 export class CartDetailsComponent {
-  cartProducts$: Observable<CartProduct[]> = this.store
-    .select(selectCartItems)
-    .pipe(
-      filter(
-        (cartItems): cartItems is NonNullable<typeof cartItems> =>
-          cartItems != null
-      ),
-      switchMap((cartItems) =>
-        from(Object.keys(cartItems)).pipe(
-          mergeMap((productId) =>
-            this.productService.getProduct(productId).pipe(
-              map((product) => ({
-                ...product,
-                quantity: cartItems[productId],
-              }))
-            )
-          ),
-          toArray()
-        )
-      )
-    );
-
-  total$ = this.cartProducts$.pipe(
-    map(
-      (cartProducts) =>
-        cartProducts &&
-        cartProducts.reduce(
-          (acc, product) => acc + product.price * product.quantity,
-          0
-        )
-    )
-  );
+  cartDetailsVm$: Observable<{
+    products?: CartProduct[];
+    total?: number;
+  }> = this.store.select(cartDetailsVm);
 
   constructor(
     private readonly cartService: CartService,
-    private readonly productService: ProductService,
     private readonly snackBar: MatSnackBar,
     private readonly router: Router,
     private readonly store: Store
