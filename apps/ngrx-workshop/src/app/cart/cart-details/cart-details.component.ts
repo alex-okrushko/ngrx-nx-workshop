@@ -7,26 +7,30 @@ import { CartService } from '../cart.service';
 import { ProductService } from '../../product/product.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+
+import { selectCartItems } from '../cart.selectors';
+import * as actions from './actions';
 
 @Component({
   selector: 'ngrx-nx-workshop-cart-details',
   templateUrl: './cart-details.component.html',
-  styleUrls: ['./cart-details.component.scss']
+  styleUrls: ['./cart-details.component.scss'],
 })
 export class CartDetailsComponent {
   cartProducts$: Observable<CartProduct[] | undefined> = combineLatest(
-    this.cartService.cartItems$,
+    this.store.select(selectCartItems),
     this.productService.getProducts()
   ).pipe(
     map(([cartItems, products]) => {
       if (!cartItems || !products) return undefined;
-      return cartItems
-        .map(({ productId, quantity }): CartProduct | undefined => {
-          const product = products.find(p => p.id === productId);
+      return Object.entries(cartItems)
+        .map(([productId, quantity]): CartProduct | undefined => {
+          const product = products.find((p) => p.id === productId);
           if (!product) return undefined;
           return {
             ...product,
-            quantity
+            quantity,
           };
         })
         .filter((cartProduct): cartProduct is CartProduct => !!cartProduct);
@@ -35,7 +39,7 @@ export class CartDetailsComponent {
 
   total$ = this.cartProducts$.pipe(
     map(
-      cartProducts =>
+      (cartProducts) =>
         cartProducts &&
         cartProducts.reduce(
           (acc, product) => acc + product.price * product.quantity,
@@ -48,7 +52,8 @@ export class CartDetailsComponent {
     private readonly cartService: CartService,
     private readonly productService: ProductService,
     private readonly snackBar: MatSnackBar,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly store: Store
   ) {
     this.cartService.getCartProducts();
   }
@@ -67,13 +72,13 @@ export class CartDetailsComponent {
         products.map(({ id, quantity }) => ({ productId: id, quantity }))
       )
       // 👇 really important not to forget to subscribe
-      .subscribe(isSuccess => {
+      .subscribe((isSuccess) => {
         if (isSuccess) {
-          this.cartService.getCartProducts();
+          this.store.dispatch(actions.purchaseSuccess());
           this.router.navigateByUrl('');
         } else {
           this.snackBar.open('Purchase error', 'Error', {
-            duration: 2500
+            duration: 2500,
           });
         }
       });
