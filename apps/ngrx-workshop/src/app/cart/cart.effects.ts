@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { CartService } from './cart.service';
 
-import { catchError, defer, map, of, switchMap, timer } from 'rxjs';
+import { catchError, defer, map, mergeMap, of, switchMap, timer } from 'rxjs';
+import * as productDetailsActions from '../product/product-details/actions';
 import * as actions from './actions';
 import * as cartDetailsActions from './cart-details/actions';
 
@@ -29,6 +30,26 @@ export class CartEffects {
             of(
               actions.fetchCartItemsError({
                 errorMessage: 'Error Fetching Cart Items',
+              })
+            )
+          )
+        )
+      )
+    );
+  });
+
+  addProductToCart$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(productDetailsActions.addToCart),
+      mergeMap(({ productId }) =>
+        this.cartService.addProduct(productId).pipe(
+          map(() => actions.addToCartSuccess()),
+          // passing the productId to the Error, so it can be restored
+          catchError(() =>
+            of(
+              actions.addToCartError({
+                productId,
+                errorMessage: 'Error Adding To Cart',
               })
             )
           )

@@ -12,3 +12,10 @@ export const fetchCartItemsError = createAction(
   '[Cart API] fetch items error',
   props<{ errorMessage: string }>()
 );
+
+export const addToCartSuccess = createAction('[Cart API] add product success');
+
+export const addToCartError = createAction(
+  '[Cart API] add product error',
+  props<{ productId: string; errorMessage: string }>()
+);
