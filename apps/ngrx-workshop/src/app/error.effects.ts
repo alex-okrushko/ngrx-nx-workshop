@@ -20,7 +20,10 @@ export class ErrorEffects {
           productApiActions.productsFetchedError,
           cartApiActions.fetchCartItemsError,
           cartApiActions.addToCartError,
-          productApiActions.singleProductFetchedError
+          productApiActions.singleProductFetchedError,
+          cartApiActions.purchaseError,
+          cartApiActions.removeAllFromCartError,
+          cartApiActions.removeSingleFromCartError
         ),
         tap(({ errorMessage }) => {
           this.snackBar.open(errorMessage, 'Error', {
