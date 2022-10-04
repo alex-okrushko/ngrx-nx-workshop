@@ -11,7 +11,10 @@ import { CartIconModule } from './cart/cart-icon/cart-icon.module';
 import { CartModule } from './cart/cart.module';
 import { ErrorEffects } from './error.effects';
 import { ProductEffects } from './product/product.effects';
-import { productsReducer } from './product/product.reducer';
+import {
+  productsReducer,
+  PRODUCT_FEATURE_KEY,
+} from './product/product.reducer';
 import { RoutingModule } from './router/routing.module';
 
 @NgModule({
@@ -22,7 +25,7 @@ import { RoutingModule } from './router/routing.module';
     RoutingModule,
     CartIconModule,
     MatToolbarModule,
-    StoreModule.forRoot({ product: productsReducer }),
+    StoreModule.forRoot({ [PRODUCT_FEATURE_KEY]: productsReducer }),
     EffectsModule.forRoot([ProductEffects, ErrorEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 50 }),
     CartModule,

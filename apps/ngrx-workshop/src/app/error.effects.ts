@@ -19,7 +19,8 @@ export class ErrorEffects {
         ofType(
           productApiActions.productsFetchedError,
           cartApiActions.fetchCartItemsError,
-          cartApiActions.addToCartError
+          cartApiActions.addToCartError,
+          productApiActions.singleProductFetchedError
         ),
         tap(({ errorMessage }) => {
           this.snackBar.open(errorMessage, 'Error', {
