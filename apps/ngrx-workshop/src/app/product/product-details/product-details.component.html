@@ -1,4 +1,5 @@
-<ng-container *ngIf="product$ | async as product; else loading">
+<ng-container *ngIf="vm$ | async as vm">
+<ng-container *ngIf="vm.product as product; else loading">
   <mat-card>
     <mat-card-title>{{ product.title }}</mat-card-title>
     <mat-card-subtitle>{{ product.price | currency }}</mat-card-subtitle>
@@ -8,10 +9,10 @@
       <mat-progress-bar *ngIf="!product.description" mode="indeterminate"></mat-progress-bar>
     </mat-card-content>
     <mat-card-actions>
-      <ngrx-nx-workshop-stars [canRate]="true" (ratingChange)="setRating(product.id, $event)"
-        [rated]="customerRating$ | async" [rating]="product.rating">
+      <ngrx-nx-workshop-stars [canRate]="true" (ratingChange)="setRating($event)"
+        [rated]="vm.rating" [rating]="product.rating">
       </ngrx-nx-workshop-stars>
-      <div *ngIf="customerRating$ | async">Your rating</div>
+      <div *ngIf="vm.rating">Your rating</div>
       <div class="space-filler"></div>
       <div class="action-buttons">
         <button mat-button type="button" (click)="back()">
@@ -44,7 +45,7 @@
 
   <h2>Reviews</h2>
 
-  <mat-card class="review" *ngFor="let review of reviews$ | async">
+  <mat-card class="review" *ngFor="let review of vm.reviews">
     <mat-card-title>{{review.reviewer}}</mat-card-title>
     <mat-card-content>"{{review.reviewText}}"</mat-card-content>
   </mat-card>
@@ -52,3 +53,4 @@
 <ng-template #loading>
   <ngrx-nx-workshop-spinner></ngrx-nx-workshop-spinner>
 </ng-template>
+</ng-container>
