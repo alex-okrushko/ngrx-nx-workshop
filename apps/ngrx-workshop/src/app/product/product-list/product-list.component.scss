@@ -8,6 +8,10 @@ mat-card {
   max-width: 400px;
 }
 
+mat-progress-bar {
+  position: absolute;
+}
+
 .products-container {
   display: flex;
   flex-wrap: wrap;

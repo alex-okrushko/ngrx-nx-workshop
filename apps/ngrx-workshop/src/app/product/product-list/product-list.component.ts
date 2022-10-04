@@ -4,10 +4,16 @@ import { map, Observable, shareReplay } from 'rxjs';
 import { Rating } from '@ngrx-nx-workshop/api-interfaces';
 import { RatingService } from '../rating.service';
 
-import { Store } from '@ngrx/store';
-import { ProductModel } from '../../model/product';
-import { selectProducts } from '../product.selectors';
+import { createSelector, Store } from '@ngrx/store';
+import { LoadingState } from '../../shared/call-state';
+import { selectProducts, selectProductsCallState } from '../product.selectors';
 import * as actions from './actions';
+
+const productListVm = createSelector(
+  selectProducts,
+  selectProductsCallState,
+  (products, productsCallState) => ({ products, productsCallState })
+);
 
 @Component({
   selector: 'ngrx-nx-workshop-home',
@@ -15,9 +21,12 @@ import * as actions from './actions';
   styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
-  products$?: Observable<ProductModel[] | undefined> =
-    this.store.select(selectProducts);
+  productListVm$ = this.store.select(productListVm);
+
   customerRatings$?: Observable<{ [productId: string]: Rating }>;
+
+  // Make LoadingState be available in the template.
+  readonly LoadingState = LoadingState;
 
   constructor(
     private readonly store: Store,
