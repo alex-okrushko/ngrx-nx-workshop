@@ -12,6 +12,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { ProductEffects } from './product/product.effects';
 import { ErrorEffects } from './error.effects';
+import { CartModule } from './cart/cart.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +25,7 @@ import { ErrorEffects } from './error.effects';
     StoreModule.forRoot({ product: productsReducer }),
     EffectsModule.forRoot([ProductEffects, ErrorEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 50 }),
+    CartModule,
   ],
   bootstrap: [AppComponent],
 })
