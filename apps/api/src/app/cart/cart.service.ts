@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CartItem } from '@ngrx-nx-workshop/api-interfaces';
 
 @Injectable()
@@ -6,10 +6,13 @@ export class CartService {
   private cartProducts: CartItem[] = [];
 
   private getItem(id: string): CartItem | undefined {
-    return this.cartProducts.find(cartItem => cartItem.productId === id);
+    return this.cartProducts.find((cartItem) => cartItem.productId === id);
   }
 
   addProduct(id: string): CartItem[] {
+    if (Math.random() < 0.25) {
+      throw new HttpException('cart failed', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     const item = this.getItem(id);
     if (item) {
       item.quantity += 1;
@@ -25,7 +28,7 @@ export class CartService {
       item.quantity -= 1;
     } else {
       this.cartProducts = this.cartProducts.filter(
-        cartProduct => cartProduct.productId !== id
+        (cartProduct) => cartProduct.productId !== id
       );
     }
     return this.cartProducts;
