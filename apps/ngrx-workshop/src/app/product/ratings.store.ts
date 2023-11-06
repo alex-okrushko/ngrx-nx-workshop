@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ProductRating, Rating } from '@ngrx-nx-workshop/api-interfaces';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { concatMap, switchMap } from 'rxjs';
+import { concatMap, filter, switchMap } from 'rxjs';
 import { RatingService } from './rating.service';
 
 interface RatingsState {
@@ -28,10 +28,11 @@ export class RatingsStore extends ComponentStore<RatingsState> {
         )
       )
     );
-  });
+  }); 
 
-  readonly setRating = this.effect<ProductRating>((productRating$) => {
+  readonly setRating = this.effect<Partial<ProductRating>>((productRating$) => {
     return productRating$.pipe(
+      filter((rating): rating is ProductRating => rating.productId != null),
       concatMap(({ rating, productId }) =>
         this.ratingService.setRating({ productId, rating }).pipe(
           tapResponse(

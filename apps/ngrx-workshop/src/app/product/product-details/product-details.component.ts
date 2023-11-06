@@ -1,21 +1,20 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Rating } from '@ngrx-nx-workshop/api-interfaces';
 
-import { ProductDetailsStore } from './product-details.store';
+import { productDetailsStore } from './product-details.store';
 
 @Component({
   selector: 'ngrx-nx-workshop-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
-  providers: [ProductDetailsStore],
+  providers: [productDetailsStore],
 })
 export class ProductDetailsComponent {
-  readonly vm$ = this.productDetailsStore.vm$;
+  readonly productDetailsStore = inject(productDetailsStore);
 
   constructor(
     private readonly location: Location,
-    private readonly productDetailsStore: ProductDetailsStore
   ) {}
 
   addToCart(productId: string) {

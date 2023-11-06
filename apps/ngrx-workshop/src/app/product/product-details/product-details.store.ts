@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Rating, Review } from '@ngrx-nx-workshop/api-interfaces';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { concatLatestFrom } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, switchMap, tap } from 'rxjs';
+import { filter, pipe, switchMap, tap } from 'rxjs';
 import {
   selectCurrentProduct,
   selectCurrentProductId,
@@ -11,78 +12,85 @@ import {
 import { RatingService } from '../rating.service';
 import { RatingsStore } from '../ratings.store';
 import * as actions from './actions';
+import {
+  signalStore,
+  withState,
+  withMethods,
+  withComputed,
+  withHooks,
+  patchState,
+} from '@ngrx/signals';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
-interface ProductDetailsState {
-  reviews?: Review[];
-}
+type ProductDetailsState = {
+  reviews: Review[];
+};
 
-@Injectable()
-export class ProductDetailsStore extends ComponentStore<ProductDetailsState> {
-  constructor(
-    private readonly store: Store,
-    private readonly ratingService: RatingService,
-    private readonly ratingsStore: RatingsStore
-  ) {
-    super({});
-    this.store.dispatch(actions.productDetailsOpened());
+export const productDetailsStore = signalStore(
+  withState<ProductDetailsState>({
+    reviews: [],
+  }),
+  withMethods((detailsStore) => {
+    const store = inject(Store);
+    const ratingsStore = inject(RatingsStore);
+    const ratingService = inject(RatingService);
+    const productId = store.selectSignal(selectCurrentProductId);
 
-    // This re-fetches reviews whenever productId changes.
-    this.fetchReviews(this.productId$);
-    this.ratingsStore.fetchRating(this.productId$);
-  }
-
-  private readonly productId$ = this.store
-    .select(selectCurrentProductId)
-    .pipe(filter((id): id is string => id != null));
-
-  readonly vm$ = this.select(
-    this.state$,
-    this.store.select(selectCurrentProduct),
-    this.productId$.pipe(
-      switchMap((productId) => this.ratingsStore.selectRating(productId))
-    ),
-    ({ reviews }, product, rating) => ({ reviews, rating, product })
-  );
-
-  readonly setRating = this.effect<Rating>((rating$) => {
-    return rating$.pipe(
-      concatLatestFrom(() => this.productId$),
-      tap(([rating, productId]) => {
-        this.ratingsStore.setRating({ rating, productId });
-      })
-    );
-  });
-
-  readonly postReview = this.effect<{ reviewer: string; reviewText: string }>(
-    (review$) => {
-      return review$.pipe(
-        concatLatestFrom(() => this.productId$),
-        switchMap(([review, productId]) =>
-          this.ratingService.postReview({ productId, ...review }).pipe(
+    const fetchReviews = rxMethod<string>((productId$) => {
+      return productId$.pipe(
+        switchMap((productId) =>
+          ratingService.getReviews(productId).pipe(
             tapResponse(
-              () => this.fetchReviews(productId),
+              (reviews) => patchState(detailsStore, { reviews }),
               (e) => console.log(e)
             )
           )
         )
       );
-    }
-  );
-
-  readonly fetchReviews = this.effect<string>((productId$) => {
-    return productId$.pipe(
-      switchMap((productId) =>
-        this.ratingService.getReviews(productId).pipe(
-          tapResponse(
-            (reviews) => this.patchState({ reviews }),
-            (e) => console.log(e)
-          )
-        )
+    });
+    return {
+      setRating: (rating: Rating) => {
+        ratingsStore.setRating({ rating, productId: productId() });
+      },
+      fetchReviews,
+      postReview: rxMethod<{ reviewer: string; reviewText: string }>(
+        (review$) => {
+          return review$.pipe(
+            switchMap((review) =>
+              ratingService
+                .postReview({ productId: productId()!, ...review })
+                .pipe(
+                  tapResponse(
+                    () => fetchReviews(productId()!),
+                    (e) => console.log(e)
+                  )
+                )
+            )
+          );
+        }
+      ),
+      addToCart: (productId: string) => {
+        store.dispatch(actions.addToCart({ productId }));
+      },
+    };
+  }),
+  withComputed(() => ({
+    product: inject(Store).selectSignal(selectCurrentProduct),
+    rating: toSignal(
+      inject(RatingsStore).selectRating(
+        inject(Store).selectSignal(selectCurrentProductId)()!
       )
-    );
-  });
+    ),
+  })),
+  withHooks({
+    onInit: (detailsStore) => {
+      const store = inject(Store);
+      const ratingsStore = inject(RatingsStore);
+      const productId = store.selectSignal(selectCurrentProductId);
 
-  addToCart(productId: string) {
-    this.store.dispatch(actions.addToCart({ productId }));
-  }
-}
+      store.dispatch(actions.productDetailsOpened());
+      detailsStore.fetchReviews(productId()!);
+      ratingsStore.fetchRating(productId()!);
+    },
+  })
+);

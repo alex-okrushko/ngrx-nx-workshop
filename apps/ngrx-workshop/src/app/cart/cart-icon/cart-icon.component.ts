@@ -9,7 +9,9 @@ import * as cartSelectors from '../cart.selectors';
   styleUrls: ['./cart-icon.component.scss'],
 })
 export class CartIconComponent {
-  cartItemsCounter$ = this.store.select(cartSelectors.selectCartItemsCount);
+  readonly cartItemsCounter = this.store.selectSignal(
+    cartSelectors.selectCartItemsCount
+  );
 
   constructor(private readonly store: Store) {}
 }

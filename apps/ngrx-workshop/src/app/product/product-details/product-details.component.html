@@ -1,24 +1,33 @@
-<ng-container *ngIf="vm$ | async as vm">
-<ng-container *ngIf="vm.product as product; else loading">
+<ng-container *ngIf="productDetailsStore.product() as product; else loading">
   <mat-card>
     <mat-card-title>{{ product.title }}</mat-card-title>
     <mat-card-subtitle>{{ product.price | currency }}</mat-card-subtitle>
     <mat-card-content>
       <img [src]="product.url" />
       <span *ngIf="product.description">{{ product.description }}</span>
-      <mat-progress-bar *ngIf="!product.description" mode="indeterminate"></mat-progress-bar>
+      <mat-progress-bar
+        *ngIf="!product.description"
+        mode="indeterminate"
+      ></mat-progress-bar>
     </mat-card-content>
     <mat-card-actions>
-      <ngrx-nx-workshop-stars [canRate]="true" (ratingChange)="setRating($event)"
-        [rated]="vm.rating" [rating]="product.rating">
+      <ngrx-nx-workshop-stars
+        [canRate]="true"
+        (ratingChange)="setRating($event)"
+        [rated]="productDetailsStore.rating()"
+        [rating]="product.rating"
+      >
       </ngrx-nx-workshop-stars>
-      <div *ngIf="vm.rating">Your rating</div>
+      <div *ngIf="productDetailsStore.rating()">Your rating</div>
       <div class="space-filler"></div>
       <div class="action-buttons">
-        <button mat-button type="button" (click)="back()">
-          Back
-        </button>
-        <button mat-raised-button color="primary" type="button" (click)="addToCart(product.id)">
+        <button mat-button type="button" (click)="back()">Back</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="addToCart(product.id)"
+        >
           Add to cart
         </button>
       </div>
@@ -28,29 +37,54 @@
   <mat-card class="review">
     <mat-card-subtitle>Submit your review</mat-card-subtitle>
     <mat-card-content>
-      <form #reviewForm="ngForm" (ngSubmit)="submit(reviewForm.value)" [class.hide]="reviewForm.submitted">
+      <form
+        #reviewForm="ngForm"
+        (ngSubmit)="submit(reviewForm.value)"
+        [class.hide]="reviewForm.submitted"
+      >
         <mat-form-field appearance="fill">
           <mat-label>Name</mat-label>
-          <input matInput required ngModel name="reviewer" placeholder="Enter your name">
+          <input
+            matInput
+            required
+            ngModel
+            name="reviewer"
+            placeholder="Enter your name"
+          />
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Review</mat-label>
-          <textarea type="text" matInput ngModel name="reviewText" required placeholder="Type your message"></textarea>
+          <textarea
+            type="text"
+            matInput
+            ngModel
+            name="reviewText"
+            required
+            placeholder="Type your message"
+          ></textarea>
         </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!reviewForm.valid">Send</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!reviewForm.valid"
+        >
+          Send
+        </button>
       </form>
-      <div *ngIf="reviewForm.submitted">Thank you for submitting your review</div>
+      <div *ngIf="reviewForm.submitted">
+        Thank you for submitting your review
+      </div>
     </mat-card-content>
   </mat-card>
 
   <h2>Reviews</h2>
 
-  <mat-card class="review" *ngFor="let review of vm.reviews">
-    <mat-card-title>{{review.reviewer}}</mat-card-title>
-    <mat-card-content>"{{review.reviewText}}"</mat-card-content>
+  <mat-card class="review" *ngFor="let review of productDetailsStore.reviews()">
+    <mat-card-title>{{ review.reviewer }}</mat-card-title>
+    <mat-card-content>"{{ review.reviewText }}"</mat-card-content>
   </mat-card>
 </ng-container>
 <ng-template #loading>
   <ngrx-nx-workshop-spinner></ngrx-nx-workshop-spinner>
 </ng-template>
-</ng-container>
